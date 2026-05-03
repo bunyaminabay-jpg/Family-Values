@@ -1,0 +1,1113 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Nunito:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { font-family: 'Nunito', sans-serif; }
+
+  #app {
+    min-height: 600px;
+    background: linear-gradient(135deg, #1a0533 0%, #0d1b4f 50%, #0a3d2e 100%);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Stars background */
+  #app::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 75%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 40%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 30%, rgba(255,255,255,0.3) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .screen { position: relative; z-index: 1; }
+
+  /* HOME SCREEN */
+  #home {
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+
+  .logo-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ffd700, #ff9f43, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+  }
+
+  .logo-sub {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  .bridge-svg-home {
+    margin: 0.5rem auto 1.5rem;
+    display: block;
+  }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    max-width: 520px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .game-card {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 1rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-align: center;
+  }
+
+  .game-card:hover {
+    background: rgba(255,255,255,0.18);
+    transform: translateY(-2px);
+    border-color: rgba(255,215,0,0.6);
+  }
+
+  .game-card.wide {
+    grid-column: span 2;
+  }
+
+  .game-icon { font-size: 2rem; margin-bottom: 0.4rem; }
+  .game-name { font-size: 0.85rem; font-weight: 700; color: #ffd700; margin-bottom: 0.2rem; }
+  .game-desc { font-size: 0.72rem; color: rgba(255,255,255,0.7); line-height: 1.4; }
+
+  .section-label {
+    font-size: 0.7rem;
+    color: rgba(255,215,0,0.8);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  /* GAME SCREEN */
+  #game-screen { padding: 1rem 1.25rem; }
+
+  .game-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .back-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+  }
+
+  .game-title-bar {
+    flex: 1;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: #ffd700;
+  }
+
+  .score-display {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.7);
+    text-align: right;
+  }
+
+  /* Bridge meter */
+  .bridge-meter {
+    margin-bottom: 1.25rem;
+  }
+
+  .bridge-meter-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 0.4rem;
+  }
+
+  .bridge-track {
+    height: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bridge-fill {
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.6s ease;
+    background: linear-gradient(90deg, #e74c3c, #f39c12, #2ecc71);
+  }
+
+  .bridge-icon-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.3rem;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* Question card */
+  .question-card {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .q-category {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #ffd700;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .q-perspective {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .p-tag {
+    font-size: 0.68rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-weight: 700;
+    border: 1px solid;
+  }
+
+  .p-tag.elder { background: rgba(255,215,0,0.15); border-color: rgba(255,215,0,0.5); color: #ffd700; }
+  .p-tag.young { background: rgba(100,200,255,0.15); border-color: rgba(100,200,255,0.5); color: #64c8ff; }
+  .p-tag.both { background: rgba(180,100,255,0.15); border-color: rgba(180,100,255,0.5); color: #c882ff; }
+
+  .q-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .q-sub {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.6);
+    font-style: italic;
+  }
+
+  /* Options */
+  .options-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem; }
+
+  .opt-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .opt-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,215,0,0.5); }
+  .opt-btn.correct { background: rgba(46,204,113,0.25); border-color: #2ecc71; }
+  .opt-btn.wrong { background: rgba(231,76,60,0.25); border-color: #e74c3c; }
+  .opt-btn.missed { background: rgba(255,215,0,0.15); border-color: #ffd700; }
+  .opt-btn:disabled { cursor: default; }
+
+  .opt-letter {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Feedback */
+  .feedback-box {
+    background: rgba(255,255,255,0.08);
+    border-left: 3px solid #ffd700;
+    border-radius: 0 12px 12px 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 0.75rem;
+    display: none;
+  }
+
+  .next-btn {
+    width: 100%;
+    background: linear-gradient(90deg, #f39c12, #ffd700);
+    border: none;
+    color: #1a0533;
+    border-radius: 12px;
+    padding: 0.85rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: none;
+    transition: opacity 0.2s;
+  }
+
+  .next-btn:hover { opacity: 0.9; }
+
+  /* RESULT SCREEN */
+  #result-screen {
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+  }
+
+  .result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: #ffd700;
+    margin-bottom: 0.5rem;
+  }
+
+  .result-score-big {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+  }
+
+  .result-msg {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .bridge-result-svg { margin: 1rem auto; display: block; }
+
+  .play-again-btn {
+    background: linear-gradient(90deg, #f39c12, #ffd700);
+    border: none;
+    color: #1a0533;
+    border-radius: 12px;
+    padding: 0.85rem 2rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 0.5rem auto 0;
+    display: block;
+  }
+
+  /* Counter bar */
+  .q-counter {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .q-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: background 0.3s;
+  }
+
+  .q-dot.done { background: #2ecc71; }
+  .q-dot.current { background: #ffd700; }
+  .q-dot.wrong-done { background: #e74c3c; }
+
+  .board-game-section {
+    margin-top: 1.5rem;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 1.25rem;
+    text-align: left;
+  }
+
+  .bg-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: #ffd700;
+    margin-bottom: 0.75rem;
+    text-align: center;
+  }
+
+  .bg-game-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .bg-game-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .bg-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f39c12, #ffd700);
+    color: #1a0533;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .bg-name { font-weight: 700; font-size: 0.88rem; color: #ffd700; margin-bottom: 0.2rem; }
+  .bg-desc { font-size: 0.78rem; color: rgba(255,255,255,0.75); line-height: 1.5; }
+
+  .tab-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 4px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: linear-gradient(90deg, #f39c12, #ffd700);
+    color: #1a0533;
+  }
+</style>
+
+<div id="app">
+  <!-- HOME SCREEN -->
+  <div id="home" class="screen">
+    <div class="logo-title">Value Challenges</div>
+    <div class="logo-sub">Bridges Between Generations</div>
+
+    <svg class="bridge-svg-home" viewBox="0 0 300 80" width="260" height="80">
+      <defs>
+        <linearGradient id="bridgeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#f39c12;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#ffd700;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <!-- Water -->
+      <ellipse cx="150" cy="72" rx="120" ry="8" fill="rgba(30,100,180,0.25)"/>
+      <!-- Bridge arches -->
+      <path d="M30 65 Q90 20 150 65" fill="none" stroke="url(#bridgeGrad)" stroke-width="3" opacity="0.9"/>
+      <path d="M150 65 Q210 20 270 65" fill="none" stroke="url(#bridgeGrad)" stroke-width="3" opacity="0.9"/>
+      <!-- Pillars -->
+      <rect x="147" y="55" width="6" height="15" fill="#f39c12" rx="2"/>
+      <rect x="27" y="58" width="6" height="10" fill="#f39c12" rx="2"/>
+      <rect x="267" y="58" width="6" height="10" fill="#f39c12" rx="2"/>
+      <!-- Road -->
+      <line x1="30" y1="65" x2="270" y2="65" stroke="url(#bridgeGrad)" stroke-width="2.5"/>
+      <!-- Figures -->
+      <circle cx="50" cy="55" r="7" fill="rgba(255,215,0,0.8)"/>
+      <text x="50" y="59" text-anchor="middle" font-size="8" fill="#1a0533" font-weight="700">👴</text>
+      <circle cx="250" cy="55" r="7" fill="rgba(100,200,255,0.8)"/>
+      <text x="250" y="59" text-anchor="middle" font-size="8" fill="#1a0533" font-weight="700">🧑</text>
+      <!-- Labels -->
+      <text x="50" y="46" text-anchor="middle" font-size="9" fill="rgba(255,215,0,0.8)" font-family="Nunito,sans-serif">Büyükler</text>
+      <text x="250" y="46" text-anchor="middle" font-size="9" fill="rgba(100,200,255,0.8)" font-family="Nunito,sans-serif">Gençler</text>
+    </svg>
+
+    <div class="tab-bar" style="max-width:520px;margin:0 auto 1rem;">
+      <button class="tab-btn active" onclick="showTab('online')">🖥 Online Oyunlar</button>
+      <button class="tab-btn" onclick="showTab('board')">🎲 Board Games</button>
+    </div>
+
+    <div id="tab-online">
+      <p class="section-label">5 farklı oyun — oyna ve köprüyü kur!</p>
+      <div class="games-grid">
+        <div class="game-card" onclick="startGame(0)">
+          <div class="game-icon">🎯</div>
+          <div class="game-name">Değerler Köprüsü</div>
+          <div class="game-desc">Nesillerin paylaştığı değerleri bul, köprüyü güçlendir</div>
+        </div>
+        <div class="game-card" onclick="startGame(1)">
+          <div class="game-icon">🗣</div>
+          <div class="game-name">Sesin Kim?</div>
+          <div class="game-desc">Sözü hangi nesil söyledi? Tahmin et!</div>
+        </div>
+        <div class="game-card" onclick="startGame(2)">
+          <div class="game-icon">⚖️</div>
+          <div class="game-name">Nesil Aynası</div>
+          <div class="game-desc">İki neslin bakış açısını karşılaştır</div>
+        </div>
+        <div class="game-card" onclick="startGame(3)">
+          <div class="game-icon">💬</div>
+          <div class="game-name">Ortak Dil</div>
+          <div class="game-desc">Doğru iletişim köprüsünü kur</div>
+        </div>
+        <div class="game-card wide" onclick="startGame(4)">
+          <div class="game-icon">🌉</div>
+          <div class="game-name">Büyük Final: Köprü Ustası</div>
+          <div class="game-desc">Tüm nesil farkı sorularından oluşan zorlu tur — köprü sağlam kalacak mı?</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-board" style="display:none">
+      <div class="board-game-section">
+        <div class="bg-section-title">🎲 Board Game Tasarımları</div>
+
+        <div class="bg-game-row">
+          <div class="bg-num">1</div>
+          <div>
+            <div class="bg-name">Köprü Taşları — The Bridge Stones</div>
+            <div class="bg-desc"><strong>Materyal:</strong> 60 kart, 2 köprü tahtası (büyük/genç nesil), taş pullar.<br>
+            <strong>Nasıl oynanır:</strong> Her oyuncu karttaki durumu okur ("Akşam yemeği ailesiz yenir mi?"), iki nesil tarafına koyduğu taşla kendi görüşünü temsil eder. Taraflar örtüştüğünde köprüye taş eklenir. En çok taşlı köprü kazanır.<br>
+            <strong>Sonuç:</strong> Tahta üzerinde köprü tamamsa ekip birlikte fotoğraf çekilir; yıkık kalırsa tartışma kartı çekilir.</div>
+          </div>
+        </div>
+
+        <div class="bg-game-row">
+          <div class="bg-num">2</div>
+          <div>
+            <div class="bg-name">Dedektif Nesil — Generation Detective</div>
+            <div class="bg-desc"><strong>Materyal:</strong> Röportaj kartları, ipucu zarfları, dedektif defterleri.<br>
+            <strong>Nasıl oynanır:</strong> Kartlarda gerçek aile röportajlarından alıntı var. Hangi nesle ait? Dedektifler ipuçlarını değerlendirerek tahmin yürütür. Doğru tahminler "köprü puanı" kazandırır.<br>
+            <strong>Sonuç:</strong> Yüksek puan = köprü güçlü kartı; düşük puan = "anlaşma görüşmesi" mini oyunu.</div>
+          </div>
+        </div>
+
+        <div class="bg-game-row">
+          <div class="bg-num">3</div>
+          <div>
+            <div class="bg-name">Değer Açık Artırması — Value Auction</div>
+            <div class="bg-desc"><strong>Materyal:</strong> Değer kartları (saygı, özgürlük, sadakat, yenilik…), jeton seti.<br>
+            <strong>Nasıl oynanır:</strong> Her oyuncu 100 jetonla başlar. Değer kartları müzayedeye çıkar. Büyük nesil hangi değere daha çok teklif verir? Genç nesil hangisine? Farklı teklifler tartışmayı açar.<br>
+            <strong>Sonuç:</strong> Ortak satın alınan değerler "köprü merkezine" yerleştirilir; sahip çıkılmayanlar "uçurum" tarafına gider.</div>
+          </div>
+        </div>
+
+        <div class="bg-game-row">
+          <div class="bg-num">4</div>
+          <div>
+            <div class="bg-name">Zaman Tüneli — Time Tunnel</div>
+            <div class="bg-desc"><strong>Materyal:</strong> Soru zarfları, zaman tüneli panosu (geçmiş→bugün), piyonlar.<br>
+            <strong>Nasıl oynanır:</strong> Piyonlar tünelde yürür. Her durağa gelen "Annen/babanın çocukluğunda teknoloji nasıldı?" gibi köprü soruları çeker. Doğru yanıtlar piyonu ilerletir. İlk zaman tünelini geçen ekip kazanır.<br>
+            <strong>Sonuç:</strong> Pano üzerinde bitiş noktasında küçük "köprü" resmi kutlanır.</div>
+          </div>
+        </div>
+
+        <div class="bg-game-row">
+          <div class="bg-num">5</div>
+          <div>
+            <div class="bg-name">Ortak Hikaye — Shared Story</div>
+            <div class="bg-desc"><strong>Materyal:</strong> Hikaye başlangıç kartları, nesil zarfları, yazı alanı.<br>
+            <strong>Nasıl oynanır:</strong> Bir kart hikayenin başını verir. Büyük nesil temsilcisi bir cümle ekler, genç nesil temsilcisi bir cümle ekler. Sırayla hikaye büyür. Sonunda hikaye okunur ve oylama yapılır: "Ne kadar uyumlu?" (1-10 köprü puanı).<br>
+            <strong>Sonuç:</strong> Yüksek uyum = köprü resmi tamamlanır; düşük uyum = "diyalog köprüsü" görevi verilir.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="game-screen" class="screen" style="display:none">
+    <div class="game-header">
+      <button class="back-btn" onclick="goHome()">← Geri</button>
+      <div class="game-title-bar" id="game-title-bar">Değerler Köprüsü</div>
+      <div class="score-display" id="score-display">Puan: 0</div>
+    </div>
+
+    <div class="q-counter" id="q-counter"></div>
+
+    <div class="bridge-meter">
+      <div class="bridge-meter-label">
+        <span>Köprü durumu</span>
+        <span id="bridge-pct">0%</span>
+      </div>
+      <div class="bridge-track">
+        <div class="bridge-fill" id="bridge-fill" style="width:0%"></div>
+      </div>
+      <div class="bridge-icon-row">
+        <span>🏚 Yıkık</span>
+        <span>🌉 Sağlam</span>
+      </div>
+    </div>
+
+    <div class="question-card" id="question-card">
+      <div class="q-category" id="q-cat">Kategori</div>
+      <div class="q-perspective" id="q-persp"></div>
+      <div class="q-text" id="q-text">Soru yükleniyor...</div>
+      <div class="q-sub" id="q-sub"></div>
+    </div>
+
+    <div class="options-list" id="options-list"></div>
+    <div class="feedback-box" id="feedback-box"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Sonraki Soru →</button>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="result-screen" class="screen" style="display:none">
+    <div class="result-title" id="result-title">Sonuç</div>
+    <div class="result-score-big" id="result-score-big"></div>
+    <svg id="bridge-result-svg" class="bridge-result-svg" viewBox="0 0 300 120" width="280" height="120"></svg>
+    <div class="result-msg" id="result-msg"></div>
+    <button class="play-again-btn" onclick="goHome()">🏠 Ana Menü</button>
+  </div>
+</div>
+
+<script>
+const GAMES = [
+  {
+    name: "Değerler Köprüsü",
+    desc: "Nesillerin paylaştığı değerleri bul",
+    questions: [
+      {
+        cat: "AİLE DEĞERLERİ",
+        persp: "both",
+        text: "Aile yemeği hangi nesil için daha önemlidir?",
+        sub: "Düşün: Büyükanne/büyükbaba ile gençlerin rutinlerini karşılaştır",
+        opts: ["Her iki nesil için de eşit derecede önemli", "Büyük nesil için çok daha önemli", "Gençler için de önemli ama farklı şekilde", "Sadece özel günlerde önemli"],
+        correct: 0,
+        feedback: "Araştırmalar gösteriyor ki her iki nesil de aile yemeğini değerli buluyor — ama büyük nesil günlük alışkanlık olarak, gençler ise kaliteli zaman olarak değerlendiriyor. Köprü kurulabilir!"
+      },
+      {
+        cat: "SAYGI",
+        persp: "elder",
+        text: "Büyükler 'saygı' kelimesini duyduklarında ne hissederler?",
+        sub: "Büyüklerimizin bakış açısından düşün",
+        opts: ["Sevilme ve değer görme hissi", "Sadece formalite, gerçek değil", "Korku ve mesafe", "Kayıtsızlık"],
+        correct: 0,
+        feedback: "Büyük nesil için saygı, karşılıklı sıcaklık ve değer görme demektir — sadece kurallara uymak değil. Bu anlayış nesiller arası köprüyü güçlendirir."
+      },
+      {
+        cat: "ÖZGÜRLÜK",
+        persp: "young",
+        text: "Gençlere göre 'özgürlük' neden bu kadar önemlidir?",
+        sub: "Genç neslin perspektifinden yanıtla",
+        opts: ["Kimliğini keşfetme ve kendi kararlarını verme ihtiyacı", "Sadece eğlence amaçlı", "Kurallara karşı çıkma isteği", "Sorumluluktan kaçma"],
+        correct: 0,
+        feedback: "Gençler için özgürlük, kimliğini inşa etme sürecinin merkezindedir. Büyükler bunu anladığında 'özgürlük tartışması' bir kavga olmaktan çıkıp diyaloğa dönüşür."
+      },
+      {
+        cat: "TEKNOLOJİ",
+        persp: "both",
+        text: "Teknoloji nesiller arası iletişimi nasıl etkiliyor?",
+        sub: "Hem fayda hem de zorlukları düşün",
+        opts: ["Hem yakınlaştırıyor hem uzaklaştırıyor", "Sadece uzaklaştırıyor", "Sadece yakınlaştırıyor", "Hiç etki etmiyor"],
+        correct: 0,
+        feedback: "Doğru! WhatsApp aile grupları büyükleri yakınlaştırırken, yüz yüze zaman azaldığında uzaklaştırıcı da olabiliyor. Teknoloji bir araç — köprü kurma kararı insana ait."
+      },
+      {
+        cat: "GELECEK",
+        persp: "both",
+        text: "Büyükler ve gençler arasında en güçlü ortak değer nedir?",
+        sub: "Araştırmalara göre en sık paylaşılan değeri bul",
+        opts: ["Aile bağları ve birbirini koruma", "Maddi başarı", "Teknoloji kullanımı", "Bireysel başarı"],
+        correct: 0,
+        feedback: "Tüm kültürel araştırmalar gösteriyor: nesiller farklı yöntemler kullansa da aile bağları ve birbirini koruma her iki neslin de en önem verdiği değer. Köprünün temeli bu!"
+      }
+    ]
+  },
+  {
+    name: "Sesin Kim?",
+    desc: "Sözü hangi nesil söyledi?",
+    questions: [
+      {
+        cat: "ALINTI TAHMİNİ",
+        persp: "both",
+        text: '"Telefonu bırak ve beni dinle" — bu sözü kim söylüyor?',
+        sub: "Gerçek aile diyaloglarından alınmıştır",
+        opts: ["Büyükanne/büyükbaba", "Anne veya baba", "Genç kardeş", "İkisi de söyleyebilir"],
+        correct: 1,
+        feedback: "Genellikle ebeveynler söyler — ama ilginç olan: büyükanne/büyükbabalar da giderek daha fazla söylüyor! Ve bazen gençler de kendi aralarında birbirlerine söylüyor. Nesiller bir yerde buluşuyor."
+      },
+      {
+        cat: "ALINTI TAHMİNİ",
+        persp: "young",
+        text: '"Biz zamanında çok daha zor koşullarda yaşadık" — hangi neslin klasik cümlesi?',
+        sub: "Bu kalıbı hangi nesil sık kullanır?",
+        opts: ["Büyük nesil", "Genç nesil", "Her iki nesil de", "Hiçbiri"],
+        correct: 0,
+        feedback: "Büyük neslin klasik cümlesi! Ama dikkat: bu cümle genellikle gençleri anlamak için değil, deneyimi aktarmak için söylenir. Gençler bunu anlayınca köprü biraz daha güçleniyor."
+      },
+      {
+        cat: "ALINTI TAHMİNİ",
+        persp: "both",
+        text: '"Her şey çok hızlı değişiyor, başa çıkamıyorum" — kim daha çok hisseder bunu?',
+        sub: "Değişim karşısında hangi nesil daha zorlanır?",
+        opts: ["Büyük nesil teknoloji değişiminde", "Genç nesil sosyal değişimde", "Her iki nesil farklı alanlarda", "Kimse zorlanmaz"],
+        correct: 2,
+        feedback: "Harika! Büyükler teknoloji hızından, gençler ise sosyal ve ekonomik belirsizlikten bunalıyor. Her iki nesil de 'çok hızlı değişim' hissini yaşıyor — sadece farklı alanlarda."
+      },
+      {
+        cat: "ALINTI TAHMİNİ",
+        persp: "elder",
+        text: '"Ailemizle vakit geçirmek için para harcamak gerekmez" — hangi neslin yaklaşımı?',
+        sub: "Düşün: Kim daha pratik, kim daha deneyim odaklı?",
+        opts: ["Büyük nesil", "Genç nesil", "Her ikisi", "Hiçbiri"],
+        correct: 0,
+        feedback: "Büyük neslin klasik anlayışı! Deneyimden gelen bir hikmet: birliktelik için pahalı etkinliklere gerek yok. Gençler bunu öğrendiğinde kaliteli aile zamanı için yeni yollar keşfeder."
+      },
+      {
+        cat: "ALINTI TAHMİNİ",
+        persp: "both",
+        text: '"Seni seviyorum ama bazen anlayamıyorum" — bunu kim söyler?',
+        sub: "Nesiller arası en dürüst itiraf",
+        opts: ["Büyükler gençlere", "Gençler büyüklere", "Her iki nesil birbirine", "Kimse söylemez"],
+        correct: 2,
+        feedback: "Her iki nesil de bu hissi yaşıyor! Ve bu tam da projenin kalbi: sevgi var, anlayış çabalanıyor. Bu cümle köprünün en güçlü tuğlasıdır — karşılıklı kabul."
+      }
+    ]
+  },
+  {
+    name: "Nesil Aynası",
+    desc: "İki neslin bakış açısını karşılaştır",
+    questions: [
+      {
+        cat: "BAKIŞ AÇISI",
+        persp: "both",
+        text: "Büyükler 'evlilik' deyince ne düşünür? Gençler ne düşünür?",
+        sub: "En doğru karşılaştırmayı seç",
+        opts: ["Büyükler: sorumluluk / Gençler: birliktelik ve büyüme", "Büyükler: zorunluluk / Gençler: eğlence", "İkisi de aynı şeyi düşünür", "İkisi de farklı ama ortak nokta yok"],
+        correct: 0,
+        feedback: "Araştırmalar bunu destekliyor. Büyük nesil için evlilik sorumluluk ve toplumsal bir rol; gençler için daha çok kişisel büyüme ve duygusal birliktelik. Ama ikisi de aileye değer veriyor — köprü bu ortak noktada!"
+      },
+      {
+        cat: "ÇATIŞMA",
+        persp: "both",
+        text: "Nesiller arası en yaygın tartışma konusu hangisidir?",
+        sub: "Gerçek aile araştırmalarına göre",
+        opts: ["Ekran/telefon kullanımı ve zaman yönetimi", "Para harcamaları", "Politika görüşleri", "Yemek tercihleri"],
+        correct: 0,
+        feedback: "Evet! Dünya genelindeki aile araştırmalarında ekran süresi ve zaman yönetimi 1 numaralı çatışma konusu. Ama çözüm: teknoloji kurallarını birlikte belirlemek köprüyü güçlendiriyor."
+      },
+      {
+        cat: "ORTAK NOKTA",
+        persp: "both",
+        text: "Büyükler ve gençler hangi konuda en çok uzlaşır?",
+        sub: "Nesil farklarını aşan evrensel nokta",
+        opts: ["Çocukların iyi eğitim alması gerektiği", "Teknolojinin her şeyi kolaylaştırdığı", "Geleneklerin değişmemesi gerektiği", "Bireyselliğin önemi"],
+        correct: 0,
+        feedback: "Evrensel bir uzlaşı! Her kültürde, her dönemde büyükler ve gençler 'sonraki neslin iyi eğitim alması' konusunda uzlaşıyor. Bu, nesiller arası en sağlam köprü taşıdır."
+      },
+      {
+        cat: "İLETİŞİM",
+        persp: "both",
+        text: "Nesiller arası iletişimde en büyük engel nedir?",
+        sub: "Kök nedeni düşün",
+        opts: ["Birbirini dinleme sabırsızlığı", "Kelime dağarcığı farkı", "Farklı teknoloji kullanımı", "Fiziksel mesafe"],
+        correct: 0,
+        feedback: "Araştırmalarda tekrar eden yanıt: dinleme! Kelimeler, teknoloji veya mesafe değil — gerçekten dinleme niyeti. 'Anlamak için mi, yoksa cevap vermek için mi dinliyorum?' sorusu köprü kurar."
+      },
+      {
+        cat: "ÇÖZÜM",
+        persp: "both",
+        text: "Nesiller arası en etkili köprü kurma yöntemi hangisidir?",
+        sub: "Araştırma ve deneyimlerin ortaklaştığı nokta",
+        opts: ["Ortak aktivite — birlikte bir şey yapmak", "Uzun tartışmalar", "Birbirinden uzak durmak", "Sadece özel günlerde bir araya gelmek"],
+        correct: 0,
+        feedback: "Kesinlikle! Birlikte bir şey yapmak — yemek pişirmek, bir proje üretmek, yürüyüş yapmak — tüm araştırmalarda en güçlü köprü kurma yöntemi olarak çıkıyor. Konuşmak yerine birlikte yapmak."
+      }
+    ]
+  },
+  {
+    name: "Ortak Dil",
+    desc: "Doğru iletişim köprüsünü kur",
+    questions: [
+      {
+        cat: "İLETİŞİM",
+        persp: "young",
+        text: "Büyüğüne bir sorununu anlatmak istiyorsun. En iyi başlangıç hangisi?",
+        sub: "Köprü kuran iletişim biçimini seç",
+        opts: ['"Sana bir şey anlatmak istiyorum, dinler misin?" diye sormak', '"Sen hiç anlayamazsın zaten" demek', "Hiçbir şey söylememek", '"Bu senin döneminde farklıydı" demek'],
+        correct: 0,
+        feedback: "İzin istemek ve açık olmak — bu iki küçük adım devasa bir fark yaratıyor. 'Dinler misin?' sorusu karşı tarafı hazır hale getirir ve köprünün ilk taşını koyar."
+      },
+      {
+        cat: "DİNLEME",
+        persp: "elder",
+        text: 'Büyüğün "eskiden her şey daha iyiydi" dediğinde en iyi yanıt?',
+        sub: "Hem saygılı hem dürüst bir yaklaşım seç",
+        opts: ['"Senin zamanında neler güzeldi, anlatır mısın?" diye sormak', '"Hayır değildi, sen yanlış düşünüyorsun"', 'Konuyu değiştirmek', '"Biliyorum" deyip geçmek'],
+        correct: 0,
+        feedback: "Merakla sormak muhteşem bir köprü kurar! 'Neler güzeldi?' sorusu büyüğün deneyimini önemsiyor ve onun bakış açısına gerçekten pencere açıyor. Bu hem öğrenme hem bağlanma."
+      },
+      {
+        cat: "ÇATIŞMA ÇÖZÜMÜ",
+        persp: "both",
+        text: "Aile tartışmalarında en sağlıklı yaklaşım nedir?",
+        sub: "Köprüyü güçlendiren çözüm yolunu bul",
+        opts: ["Her iki tarafın da duygusunu kabul etmek ve ortak bir şey aramak", "En sesli konuşanın kazanması", "Büyüklerin her zaman haklı olması", "Gençlerin her zaman uyması"],
+        correct: 0,
+        feedback: "Çatışma çözümünün altın kuralı: önce duygu, sonra çözüm. 'Seni anlıyorum ve beni de anlayabilir misin?' sorusu savaşı ortadan kaldırır, köprü kurar."
+      },
+      {
+        cat: "EMPATI",
+        persp: "young",
+        text: "Büyüğünün hayatın en zor deneyimini dinlediğinde ne yapmalısın?",
+        sub: "Empati köprüsünü nasıl kurarsın?",
+        opts: ["Gerçekten dinlemek ve 'bu çok zor olmalı' demek", "Telefonuna bakmaya devam etmek", '"Şimdi her şey daha zor" demek', 'Hızla bir çözüm önermek'],
+        correct: 0,
+        feedback: "Empati = varlık. Çözüm üretmek değil, gerçekten orada olmak. 'Bu çok zor olmalı' cümlesi büyülü — karşı tarafın hissini görünür kılar ve köprünün en sağlam taşını döşer."
+      },
+      {
+        cat: "ORTAK PAYLAŞIM",
+        persp: "both",
+        text: "Nesiller arası en güzel iletişim anı ne zaman olur?",
+        sub: "Gerçek bağlantının kurulduğu anı düşün",
+        opts: ["Birlikte güldüğünüzde veya birlikte üzüldüğünüzde", "Büyüğün ders verdiği an", "Gencin dinlediği an", "Herkesin kendi işiyle meşgul olduğu an"],
+        correct: 0,
+        feedback: "Ortak duygu anları köprünün çiçek açtığı yerdir! Gülmek ve ağlamak — bu iki duygu nesil, yaş, teknoloji farklarını aşar. Aile albümü açın, eski anıları anlatın — köprü orada!"
+      }
+    ]
+  },
+  {
+    name: "Büyük Final: Köprü Ustası",
+    desc: "Zorlu karışık tur — köprü sağlam kalacak mı?",
+    questions: [
+      {
+        cat: "UZMAN SORU",
+        persp: "both",
+        text: "Sosyolojide 'nesil uçurumu' (generation gap) terimi neyi anlatır?",
+        sub: "Bu projenin temel kavramını tanımla",
+        opts: ["Nesiller arasındaki değer, davranış ve tutum farklılıkları", "Yaş farkından kaynaklanan fiziksel ayrılık", "Yalnızca teknoloji kullanım farkı", "Büyüklerin gençlere anlayışsızlığı"],
+        correct: 0,
+        feedback: "'Nesil uçurumu' — değerlerin, tutumların ve yaşam anlayışlarının nesiller arasındaki doğal farklılığıdır. Bu fark kötü değil; anlaşıldığında köprüye dönüşür. Projenin tam da amacı bu!"
+      },
+      {
+        cat: "ARAŞTIRMA",
+        persp: "both",
+        text: "Türkiye'de aile yapısı araştırmalarına göre en önemli aile değeri nedir?",
+        sub: "2025 Aile Yılı bağlamında düşün",
+        opts: ["Saygı ve dayanışma", "Bireysel başarı", "Maddi refah", "Geleneklere bağlılık"],
+        correct: 0,
+        feedback: "Türkiye'deki aile araştırmalarında saygı ve dayanışma sürekli birinci sıraya çıkıyor. Bu iki değer hem büyük hem genç nesil tarafından paylaşılan en güçlü köprü taşlarıdır."
+      },
+      {
+        cat: "PRATİK BİLGİ",
+        persp: "both",
+        text: "Nesiller arası iletişimi güçlendirmek için en kanıtlanmış yöntem?",
+        sub: "Psikoloji ve sosyoloji araştırmalarına göre",
+        opts: ["Ortak hikaye ve anı paylaşımı", "Teknoloji dersleri vermek", "Değerleri tartışmak", "Birbirinden ayrı yaşamak"],
+        correct: 0,
+        feedback: "Ortak hikaye anlatımı — storytelling — nesiller arası köprünün en güçlü bilimsel temeli. Anılar paylaşıldığında hem empati kurulur hem kimlik aktarılır. Projeniz tam bu yöntemi kullanıyor!"
+      },
+      {
+        cat: "DEĞERLENDİRME",
+        persp: "both",
+        text: "The Family Voices projesinin en önemli katkısı ne olacak?",
+        sub: "Projenin gerçek etkisini değerlendir",
+        opts: ["Öğrencilerin kendi aileleriyle gerçek bağ kurması", "Sadece İngilizce pratik yapılması", "Bilim fuarında ödül kazanılması", "Veri toplanması"],
+        correct: 0,
+        feedback: "Projenin kalbi bu! Röportajlar, dijital sergi, oyunlar — hepsi gerçek bir şey için: öğrencinin kendi büyüğüyle oturup konuşması, birbirini dinlemesi. Köprü orada kuruluyor."
+      },
+      {
+        cat: "FİNAL",
+        persp: "both",
+        text: "Nesiller arası köprünün en güçlü malzemesi nedir?",
+        sub: "Bu projenin ve tüm araştırmaların ortak cevabı",
+        opts: ["Dinleme niyeti ve merak", "Teknoloji araçları", "Ortak kurallar", "Yaş eşitliği"],
+        correct: 0,
+        feedback: "Büyük final sorusunun büyük cevabı: DİNLEME NİYETİ ve MERAK. 'Senin deneyimin neydi? Sen nasıl gördün?' soruları her teknolojik araçtan, her kuraldan daha güçlü köprü kurar. Köprü Ustası oldunuz! 🌉"
+      }
+    ]
+  }
+];
+
+let currentGame = null;
+let currentQ = 0;
+let score = 0;
+let answered = false;
+let dotStates = [];
+
+function showTab(tab) {
+  document.getElementById('tab-online').style.display = tab === 'online' ? 'block' : 'none';
+  document.getElementById('tab-board').style.display = tab === 'board' ? 'block' : 'none';
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0) === (tab === 'online'));
+  });
+}
+
+function goHome() {
+  document.getElementById('home').style.display = 'block';
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  currentGame = null;
+  currentQ = 0;
+  score = 0;
+  answered = false;
+  dotStates = [];
+}
+
+function startGame(idx) {
+  currentGame = GAMES[idx];
+  currentQ = 0;
+  score = 0;
+  answered = false;
+  dotStates = new Array(currentGame.questions.length).fill('');
+
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  document.getElementById('game-title-bar').textContent = currentGame.name;
+  document.getElementById('score-display').textContent = 'Puan: 0';
+  document.getElementById('bridge-fill').style.width = '0%';
+  document.getElementById('bridge-pct').textContent = '0%';
+
+  renderDots();
+  renderQuestion();
+}
+
+function renderDots() {
+  const container = document.getElementById('q-counter');
+  container.innerHTML = '';
+  dotStates.forEach((state, i) => {
+    const d = document.createElement('div');
+    d.className = 'q-dot';
+    if (i === currentQ) d.classList.add('current');
+    else if (state === 'correct') d.classList.add('done');
+    else if (state === 'wrong') d.classList.add('wrong-done');
+    container.appendChild(d);
+  });
+}
+
+function renderQuestion() {
+  const q = currentGame.questions[currentQ];
+  answered = false;
+
+  document.getElementById('q-cat').textContent = q.cat;
+
+  const perspEl = document.getElementById('q-persp');
+  perspEl.innerHTML = '';
+  const label = q.persp === 'elder' ? ['👴 Büyük Nesil Bakışı', 'elder'] :
+    q.persp === 'young' ? ['🧑 Genç Nesil Bakışı', 'young'] :
+    ['🔄 Her İki Nesil', 'both'];
+  const tag = document.createElement('span');
+  tag.className = 'p-tag ' + label[1];
+  tag.textContent = label[0];
+  perspEl.appendChild(tag);
+
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-sub').textContent = q.sub;
+
+  const optList = document.getElementById('options-list');
+  optList.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = `<span class="opt-letter">${String.fromCharCode(65+i)}</span>${opt}`;
+    btn.onclick = () => selectAnswer(i, btn);
+    optList.appendChild(btn);
+  });
+
+  document.getElementById('feedback-box').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+}
+
+function selectAnswer(idx, btn) {
+  if (answered) return;
+  answered = true;
+
+  const q = currentGame.questions[currentQ];
+  const allBtns = document.querySelectorAll('.opt-btn');
+
+  allBtns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.correct) {
+      if (i !== idx) b.classList.add('missed');
+    }
+  });
+
+  let gained = 0;
+  if (idx === q.correct) {
+    btn.classList.add('correct');
+    gained = 20;
+    dotStates[currentQ] = 'correct';
+  } else {
+    btn.classList.add('wrong');
+    dotStates[currentQ] = 'wrong';
+  }
+
+  score = Math.min(100, score + gained);
+  document.getElementById('score-display').textContent = 'Puan: ' + score;
+
+  const pct = Math.round(score);
+  document.getElementById('bridge-fill').style.width = pct + '%';
+  document.getElementById('bridge-pct').textContent = pct + '%';
+
+  const fb = document.getElementById('feedback-box');
+  fb.textContent = q.feedback;
+  fb.style.display = 'block';
+
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.style.display = 'block';
+  nextBtn.textContent = currentQ < currentGame.questions.length - 1 ? 'Sonraki Soru →' : 'Sonuçları Gör 🌉';
+
+  renderDots();
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= currentGame.questions.length) {
+    showResult();
+  } else {
+    renderDots();
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+
+  const pct = score;
+  let title, msg, bridgeState;
+
+  if (pct >= 80) {
+    title = '🌉 Köprü Ustası!';
+    msg = `Harika! ${pct} puan kazandınız. Nesiller arası değerleri derinlemesine anlıyorsunuz. Köprünüz sağlam — bu anlayış gerçek hayatta da nesilleri birbirine bağlayabilir.`;
+    bridgeState = 'strong';
+  } else if (pct >= 50) {
+    title = '🏗 Köprü İnşaat Halinde';
+    msg = `${pct} puan — iyi bir başlangıç! Bazı taşlar eksik ama köprü yavaş yavaş şekilleniyor. Büyüklerinizle daha fazla zaman geçirin, onların hikayelerini dinleyin.`;
+    bridgeState = 'partial';
+  } else {
+    title = '🔧 Köprü Onarım İstiyor';
+    msg = `${pct} puan. Endişelenmeyin — her büyük köprü küçük adımlarla başlar. Bu sonuç bir davet: büyüğünüzle otup bir çay için, bir anısını sorun. Köprü oradan başlıyor.`;
+    bridgeState = 'broken';
+  }
+
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-score-big').textContent = pct + ' / 100';
+  document.getElementById('result-msg').textContent = msg;
+
+  drawBridgeSVG(bridgeState, pct);
+}
+
+function drawBridgeSVG(state, pct) {
+  const svg = document.getElementById('bridge-result-svg');
+  const w = 300, h = 120;
+
+  const waterColor = 'rgba(30,100,180,0.3)';
+  const goldColor = '#ffd700';
+  const darkerGold = '#e6a800';
+  const skyColor1 = state === 'strong' ? '#0a2a1a' : state === 'partial' ? '#1a1a0a' : '#2a0a0a';
+  const skyColor2 = state === 'strong' ? '#0d3d2e' : state === 'partial' ? '#2a2a0a' : '#3d0d0d';
+
+  let bridgeParts = '';
+  if (state === 'strong') {
+    bridgeParts = `
+      <path d="M20 85 Q80 30 150 85" fill="none" stroke="${goldColor}" stroke-width="3"/>
+      <path d="M150 85 Q220 30 280 85" fill="none" stroke="${goldColor}" stroke-width="3"/>
+      <line x1="20" y1="85" x2="280" y2="85" stroke="${goldColor}" stroke-width="2.5"/>
+      <rect x="147" y="72" width="6" height="18" fill="${goldColor}" rx="2"/>
+      <rect x="17" y="78" width="6" height="12" fill="${darkerGold}" rx="2"/>
+      <rect x="277" y="78" width="6" height="12" fill="${darkerGold}" rx="2"/>
+      <!-- Cables -->
+      <line x1="80" y1="48" x2="80" y2="85" stroke="${goldColor}" stroke-width="1" opacity="0.6"/>
+      <line x1="110" y1="38" x2="110" y2="85" stroke="${goldColor}" stroke-width="1" opacity="0.6"/>
+      <line x1="190" y1="38" x2="190" y2="85" stroke="${goldColor}" stroke-width="1" opacity="0.6"/>
+      <line x1="220" y1="48" x2="220" y2="85" stroke="${goldColor}" stroke-width="1" opacity="0.6"/>
+      <!-- Figures -->
+      <circle cx="40" cy="75" r="7" fill="${goldColor}" opacity="0.9"/>
+      <text x="40" y="79" text-anchor="middle" font-size="9" fill="#1a0533">👴</text>
+      <circle cx="260" cy="75" r="7" fill="#64c8ff" opacity="0.9"/>
+      <text x="260" y="79" text-anchor="middle" font-size="9" fill="#1a0533">🧑</text>
+      <text x="150" y="20" text-anchor="middle" font-size="11" fill="${goldColor}" font-family="Nunito,sans-serif" font-weight="700">Köprü Sağlam! 🌟</text>
+    `;
+  } else if (state === 'partial') {
+    bridgeParts = `
+      <path d="M20 85 Q80 35 150 85" fill="none" stroke="${goldColor}" stroke-width="3" stroke-dasharray="8,4" opacity="0.8"/>
+      <path d="M150 85 Q220 35 280 85" fill="none" stroke="${darkerGold}" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.7"/>
+      <line x1="20" y1="85" x2="280" y2="85" stroke="${goldColor}" stroke-width="2" stroke-dasharray="10,5"/>
+      <rect x="147" y="72" width="6" height="18" fill="${darkerGold}" rx="2"/>
+      <rect x="17" y="78" width="6" height="12" fill="${darkerGold}" rx="2"/>
+      <rect x="277" y="78" width="6" height="12" fill="${darkerGold}" rx="2"/>
+      <circle cx="40" cy="75" r="7" fill="${goldColor}" opacity="0.8"/>
+      <text x="40" y="79" text-anchor="middle" font-size="9" fill="#1a0533">👴</text>
+      <circle cx="260" cy="75" r="7" fill="#64c8ff" opacity="0.8"/>
+      <text x="260" y="79" text-anchor="middle" font-size="9" fill="#1a0533">🧑</text>
+      <text x="150" y="20" text-anchor="middle" font-size="11" fill="${darkerGold}" font-family="Nunito,sans-serif" font-weight="700">Köprü İnşaat Halinde 🏗</text>
+    `;
+  } else {
+    bridgeParts = `
+      <path d="M20 85 Q60 55 100 85" fill="none" stroke="#e74c3c" stroke-width="2.5" opacity="0.8"/>
+      <path d="M200 85 Q240 55 280 85" fill="none" stroke="#e74c3c" stroke-width="2.5" opacity="0.8"/>
+      <!-- Gap in middle -->
+      <path d="M100 85 Q120 100 140 95" fill="none" stroke="#e74c3c" stroke-width="2" opacity="0.5" stroke-dasharray="4,4"/>
+      <path d="M160 92 Q175 100 200 85" fill="none" stroke="#e74c3c" stroke-width="2" opacity="0.5" stroke-dasharray="4,4"/>
+      <rect x="17" y="78" width="6" height="12" fill="#c0392b" rx="2"/>
+      <rect x="277" y="78" width="6" height="12" fill="#c0392b" rx="2"/>
+      <circle cx="40" cy="78" r="7" fill="${goldColor}" opacity="0.7"/>
+      <text x="40" y="82" text-anchor="middle" font-size="9" fill="#1a0533">👴</text>
+      <circle cx="260" cy="78" r="7" fill="#64c8ff" opacity="0.7"/>
+      <text x="260" y="82" text-anchor="middle" font-size="9" fill="#1a0533">🧑</text>
+      <text x="150" y="20" text-anchor="middle" font-size="11" fill="#e74c3c" font-family="Nunito,sans-serif" font-weight="700">Köprü Onarım İstiyor 🔧</text>
+      <!-- Broken pieces falling -->
+      <line x1="140" y1="95" x2="145" y2="115" stroke="#c0392b" stroke-width="2" opacity="0.6"/>
+      <line x1="155" y1="92" x2="158" y2="112" stroke="#c0392b" stroke-width="2" opacity="0.6"/>
+    `;
+  }
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="skyG" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:${skyColor1};stop-opacity:1" />
+        <stop offset="100%" style="stop-color:${skyColor2};stop-opacity:1" />
+      </linearGradient>
+    </defs>
+    <rect width="${w}" height="${h}" fill="url(#skyG)" rx="12"/>
+    <!-- Stars -->
+    <circle cx="50" cy="15" r="1" fill="white" opacity="0.6"/>
+    <circle cx="130" cy="10" r="1.5" fill="white" opacity="0.5"/>
+    <circle cx="200" cy="18" r="1" fill="white" opacity="0.7"/>
+    <circle cx="260" cy="12" r="1" fill="white" opacity="0.4"/>
+    <!-- Water -->
+    <ellipse cx="150" cy="100" rx="130" ry="10" fill="${waterColor}"/>
+    ${bridgeParts}
+  `;
+}
+</script>
